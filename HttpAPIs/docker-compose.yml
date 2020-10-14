@@ -1,0 +1,29 @@
+version: "3.3"
+services: 
+    SqlServer:
+        container_name: SqlServer
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports: 
+            - 1453:1433
+        environment: 
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "humza@123"
+    apis:
+        container_name: Aisaction
+        depends_on: 
+            - SqlServer
+        restart: on-failure
+        ports: 
+            - 8080:80
+            - 8081:443
+        environment: 
+            - "ASPNETCORE_URLS=https://+;http://+"
+            - Kestrel__Certificates__Default__Path=/app/publish/https.pfx
+            - Kestrel__Certificates__Default__Password=humza@123
+            - "ASPNETCORE_ENVIRONMENT=Development"
+        build: .
+        volumes: 
+            - C:\Users\tufaihum\Desktop\Apis:/app/publish:rw
+
+
+
